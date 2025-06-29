@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const palettePrevBtn = document.getElementById('palette-prev-btn');
     const paletteNextBtn = document.getElementById('palette-next-btn');
     const palettePageInfo = document.getElementById('palette-page-info');
+    const paletteToggleBtn = document.getElementById('palette-toggle-btn');
 
     // Results
     const resultsContainer = document.getElementById('results-container');
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let answeredQuestions = [];
     let flaggedQuestions = [];
     let palettePage = 0;
-    const questionsPerPage = 13; // Approx 1 row of 13 questions
+    const questionsPerPage = 50;
 
     // --- Theme Switcher Logic ---
     function applyTheme(theme) {
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // -----------------------------
 
     function initializeQuiz() {
+        body.classList.remove('quiz-active');
         quizSetup.style.display = 'block';
         progressContainer.style.display = 'none';
         quizContainer.style.display = 'none';
@@ -99,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         answeredQuestions = new Array(questionsForCurrentQuiz.length).fill(null);
         flaggedQuestions = new Array(questionsForCurrentQuiz.length).fill(false);
         
+        body.classList.add('quiz-active');
         quizSetup.style.display = 'none';
         resultsContainer.style.display = 'none';
         progressContainer.style.display = 'block';
@@ -248,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showResults() {
+        body.classList.remove('quiz-active');
         progressContainer.style.display = 'none';
         quizContainer.style.display = 'none';
         prevBtn.style.display = 'none';
@@ -296,6 +300,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const isHidden = studyGuideContent.style.display === 'none';
         studyGuideContent.style.display = isHidden ? 'block' : 'none';
         studyGuideToggle.textContent = isHidden ? 'Hide Study Guide' : 'View in Study Guide';
+    });
+
+    paletteToggleBtn.addEventListener('click', () => {
+        bottomControls.classList.toggle('open');
     });
 
     palettePrevBtn.addEventListener('click', () => {
