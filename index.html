@@ -11,6 +11,10 @@
     <div class="container">
         <div class="header-controls">
             <h1>SY0-701 Security+ Practice Quiz</h1>
+            <div class="mode-switcher">
+                <button id="quiz-mode-btn" class="mode-btn active">Quiz Mode</button>
+                <button id="study-guide-mode-btn" class="mode-btn">Study Guide</button>
+            </div>
             <div class="theme-switcher-container">
                 <label class="theme-switcher" for="theme-checkbox" title="Toggle dark mode">
                     <input type="checkbox" id="theme-checkbox" title="Theme switcher" />
@@ -60,6 +64,86 @@
             <div id="summary-container"></div>
             <button id="restart-btn">Restart Quiz</button>
         </div>
+
+        <!-- Study Guide Mode -->
+        <div id="study-guide-mode" style="display: none;">
+            <div class="study-guide-layout">
+                <div class="study-guide-sidebar">
+                    <div class="study-guide-search">
+                        <input type="text" id="study-search" placeholder="Search study guide..." />
+                        <button id="search-btn">🔍</button>
+                    </div>
+                    <div class="study-guide-progress">
+                        <h3>Progress Overview</h3>
+                        <div class="progress-stats">
+                            <div class="stat">
+                                <span class="stat-number" id="studied-count">0</span>
+                                <span class="stat-label">Studied</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="total-objectives">30</span>
+                                <span class="stat-label">Total</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="study-guide-nav">
+                        <div id="study-nav-tree"></div>
+                    </div>
+                </div>
+                <div class="study-guide-main">
+                    <div class="study-guide-toolbar">
+                        <button id="bookmark-btn" title="Bookmark this section">📖</button>
+                        <button id="notes-btn" title="Add notes">📝</button>
+                        <button id="mark-studied-btn" title="Mark as studied">✓</button>
+                        <button id="print-btn" title="Print this section">🖨️</button>
+                    </div>
+                    <div id="study-guide-content-main">
+                        <div class="study-guide-welcome">
+                            <h2>CompTIA Security+ (SY0-701) Study Guide</h2>
+                            <p>Welcome to your comprehensive Security+ study guide. Select a domain and objective from the sidebar to begin studying.</p>
+                            <div class="domain-overview">
+                                <h3>Study Guide Domains:</h3>
+                                <div class="domain-cards">
+                                    <div class="domain-card" data-domain="1">
+                                        <h4>Domain 1.0</h4>
+                                        <p>General Security Concepts</p>
+                                        <span class="objective-count">4 Objectives</span>
+                                    </div>
+                                    <div class="domain-card" data-domain="2">
+                                        <h4>Domain 2.0</h4>
+                                        <p>Threats, Vulnerabilities, and Mitigations</p>
+                                        <span class="objective-count">5 Objectives</span>
+                                    </div>
+                                    <div class="domain-card" data-domain="3">
+                                        <h4>Domain 3.0</h4>
+                                        <p>Security Architecture</p>
+                                        <span class="objective-count">4 Objectives</span>
+                                    </div>
+                                    <div class="domain-card" data-domain="4">
+                                        <h4>Domain 4.0</h4>
+                                        <p>Security Operations</p>
+                                        <span class="objective-count">9 Objectives</span>
+                                    </div>
+                                    <div class="domain-card" data-domain="5">
+                                        <h4>Domain 5.0</h4>
+                                        <p>Governance, Risk, and Compliance</p>
+                                        <span class="objective-count">6 Objectives</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="study-notes-panel" style="display: none;">
+                        <h3>Study Notes</h3>
+                        <textarea id="study-notes-text" placeholder="Add your personal notes here..."></textarea>
+                        <div class="notes-buttons">
+                            <button id="save-notes-btn">Save Notes</button>
+                            <button id="close-notes-btn">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-controls">
@@ -80,6 +164,7 @@
     </div>
 
     <script src="study-guide.js"></script>
+    <script src="study-guide-mode.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

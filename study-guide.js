@@ -1,15 +1,93 @@
+// Study Guide Domains and Objectives Structure
+const studyGuideStructure = {
+    "Domain 1.0": {
+        title: "General Security Concepts",
+        objectives: [
+            "1.1 Compare and contrast various types of security controls.",
+            "1.2 Summarize these fundamental security concepts:",
+            "1.3 Explain the importance of change management processes and the impact to security.",
+            "1.4 Explain the importance of using appropriate cryptographic solutions."
+        ]
+    },
+    "Domain 2.0": {
+        title: "Threats, Vulnerabilities, and Mitigations",
+        objectives: [
+            "2.1 Compare and contrast common threat actors and motivations.",
+            "2.2 Explain common threat vectors and attack surfaces.",
+            "2.3 Explain various types of vulnerabilities.",
+            "2.4 Given a scenario, analyze indicators of malicious activity.",
+            "2.5 Explain the purpose of mitigation techniques used to secure the enterprise."
+        ]
+    },
+    "Domain 3.0": {
+        title: "Security Architecture",
+        objectives: [
+            "3.1 Compare and contrast security implications of different architecture models.",
+            "3.2 Given a scenario, apply security principles to secure enterprise infrastructure.",
+            "3.3 Compare and contrast concepts and strategies to protect data.",
+            "3.4 Explain the importance of resilience and recovery in security architecture."
+        ]
+    },
+    "Domain 4.0": {
+        title: "Security Operations",
+        objectives: [
+            "4.1 Given a scenario, apply common security techniques to computing resources.",
+            "4.2 Explain the security implications of proper hardware, software, and data asset management.",
+            "4.3 Explain various activities associated with vulnerability management.",
+            "4.4 Explain security alerting and monitoring concepts and tools.",
+            "4.5 Given a scenario, modify enterprise capabilities to enhance security.",
+            "4.6 Given a scenario, implement and maintain identity and access management.",
+            "4.7 Explain the importance of automation and orchestration related to secure operations.",
+            "4.8 Explain appropriate incident response activities.",
+            "4.9 Given a scenario, use data sources to support an investigation."
+        ]
+    },
+    "Domain 5.0": {
+        title: "Governance, Risk, and Compliance",
+        objectives: [
+            "5.1 Summarize elements of effective security governance.",
+            "5.2 Explain elements of the risk management process.",
+            "5.3 Explain the processes associated with third-party risk assessment and management.",
+            "5.4 Summarize elements of effective security compliance.",
+            "5.5 Explain types and purposes of audits and assessments.",
+            "5.6 Given a scenario, implement security awareness practices."
+        ]
+    }
+};
+
+// Comprehensive Study Guide Content
 const studyGuideData = {
     "1.1 Compare and contrast various types of security controls.": `
-        <h4>Study Guide: 1.1 Compare and contrast various types of security controls.</h4>
+        <h3>1.1 Compare and contrast various types of security controls.</h3>
         <p>Security controls are measures taken to protect information and assets. They can be categorized by their nature (Technical, Managerial, Operational, Physical) or by their function (Preventive, Deterrent, etc.).</p>
-        <h5>Controls by Nature:</h5>
-        <ul>
-            <li><strong>Technical Security Controls:</strong> Implemented through technology, often hardware or software-based. Examples: Firewalls, encryption, intrusion detection systems, and access controls.</li>
-            <li><strong>Managerial Security Controls:</strong> Involve strategies, governance, and the organizational approach to security, ensuring policies and procedures are in place. Examples: Risk assessments, security policies, security training programs, and vendor management.</li>
-            <li><strong>Operational Security Controls:</strong> Focused on day-to-day tasks and procedures followed by users or administrators. Examples: Backup and recovery procedures, incident response, and change management.</li>
-            <li><strong>Physical Security Controls:</strong> Designed to protect the physical environment of information assets. Examples: Security guards, fences, locks, CCTV, biometric access, and fire suppression systems.</li>
-        </ul>
-        <h5>Controls by Functionality:</h5>
+        
+        <h4>Controls by Nature:</h4>
+        
+        <h5>Technical Security Controls</h5>
+        <p><strong>Description:</strong> Implemented through technology, often hardware or software-based.</p>
+        <p><strong>Examples:</strong> Firewalls, encryption, intrusion detection systems, and access controls.</p>
+        <p><strong>Advantages:</strong> Can provide direct, automated protection and can scale across large infrastructures.</p>
+        <p><strong>Disadvantages:</strong> Vulnerable to technical failures or software vulnerabilities and can become obsolete.</p>
+        
+        <h5>Managerial Security Controls</h5>
+        <p><strong>Description:</strong> Involve strategies, governance, and the organizational approach to security, ensuring policies and procedures are in place.</p>
+        <p><strong>Examples:</strong> Risk assessments, security policies, security training programs, and vendor management.</p>
+        <p><strong>Advantages:</strong> Addresses the organization's overall security posture and ensures compliance.</p>
+        <p><strong>Disadvantages:</strong> Effectiveness depends on managerial commitment and requires regular review.</p>
+        
+        <h5>Operational Security Controls</h5>
+        <p><strong>Description:</strong> Focused on day-to-day tasks and procedures followed by users or administrators.</p>
+        <p><strong>Examples:</strong> Backup and recovery procedures, incident response, and change management.</p>
+        <p><strong>Advantages:</strong> Directly addresses user behavior and daily operations.</p>
+        <p><strong>Disadvantages:</strong> Requires continuous monitoring and is vulnerable to human error.</p>
+        
+        <h5>Physical Security Controls</h5>
+        <p><strong>Description:</strong> Designed to protect the physical environment of information assets.</p>
+        <p><strong>Examples:</strong> Security guards, fences, locks, CCTV, biometric access, and fire suppression systems.</p>
+        <p><strong>Advantages:</strong> Provides tangible protection against physical threats like theft and damage.</p>
+        <p><strong>Disadvantages:</strong> Does not protect against remote cyber threats and requires physical maintenance.</p>
+        
+        <h4>Controls by Functionality:</h4>
         <ul>
             <li><strong>Preventive Controls:</strong> Aim to stop an incident before it happens. Examples: Firewalls, access controls, strong password policies, and encryption.</li>
             <li><strong>Deterrent Controls:</strong> Discourage attackers by increasing risk or reducing reward. Examples: Warning banners, visible surveillance cameras, and account lockout warnings.</li>
