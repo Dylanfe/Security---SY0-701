@@ -49,15 +49,6 @@
             <button id="prev-btn" style="display: none;">Previous Question</button>
             <button id="next-btn" style="display: none;">Next Question</button>
         </div>
-        <div class="bottom-controls">
-            <div id="question-palette" style="display: none;"></div>
-            <div id="palette-legend">
-                <span class="legend-item"><span class="legend-color-box correct"></span> Correct</span>
-                <span class="legend-item"><span class="legend-color-box incorrect"></span> Incorrect</span>
-                <span class="legend-item"><span class="legend-color-box flagged"></span> Flagged</span>
-                <span class="legend-item"><span class="legend-color-box current"></span> Current</span>
-            </div>
-        </div>
         <div id="results-container" style="display: none;">
             <h2>Quiz Complete!</h2>
             <p id="score-text"></p>
@@ -65,6 +56,17 @@
             <button id="restart-btn">Restart Quiz</button>
         </div>
     </div>
+
+    <div class="bottom-controls">
+        <div id="question-palette" style="display: none;"></div>
+        <div id="palette-legend">
+            <span class="legend-item"><span class="legend-color-box correct"></span> Correct</span>
+            <span class="legend-item"><span class="legend-color-box incorrect"></span> Incorrect</span>
+            <span class="legend-item"><span class="legend-color-box flagged"></span> Flagged</span>
+            <span class="legend-item"><span class="legend-color-box current"></span> Current</span>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

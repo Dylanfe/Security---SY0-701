@@ -45,6 +45,7 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 20px;
+    padding-bottom: 150px; /* Add padding to prevent content from being hidden by the fixed footer */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -219,8 +220,15 @@ input:checked + .slider:before {
 }
 
 .bottom-controls {
-    margin-top: 20px;
-    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--container-bg);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    padding: 10px;
+    z-index: 1000;
+    display: none; /* Hidden by default, shown by JS */
 }
 
 #palette-legend {
@@ -305,6 +313,12 @@ input:checked + .slider:before {
     background-color: #f8d7da;
     border-color: #f5c6cb;
     color: #721c24;
+}
+
+body.dark-mode .palette-btn.correct,
+body.dark-mode .palette-btn.incorrect,
+body.dark-mode .palette-btn.flagged {
+    color: #333; /* Ensure text is dark on these light-colored backgrounds */
 }
 
 .palette-btn.flagged {
@@ -399,6 +413,11 @@ input:checked + .slider:before {
     color: #721c24;
 }
 
+body.dark-mode .options-list li.correct,
+body.dark-mode .options-list li.incorrect {
+    color: #333; /* Ensure text is dark on these light-colored backgrounds */
+}
+
 .options-list.disabled {
     pointer-events: none;
 }
@@ -486,6 +505,7 @@ input:checked + .slider:before {
 #prev-btn[disabled] {
     background-color: #bdc3c7;
     cursor: not-allowed;
+    color: #7f8c8d;
 }
 
 #results-container {
@@ -527,6 +547,11 @@ input:checked + .slider:before {
     border-color: #f5c6cb;
     color: #721c24;
     text-decoration: line-through;
+}
+
+body.dark-mode #summary-container .result-card li.correct,
+body.dark-mode #summary-container .result-card li.incorrect {
+    color: #333; /* Ensure text is dark on these light-colored backgrounds */
 }
 
 .result-card.correct {
