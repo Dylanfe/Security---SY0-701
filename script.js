@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Theme switcher
+    const themeCheckbox = document.getElementById('theme-checkbox');
+    const body = document.body;
+
     // Quiz Setup
     const quizSetup = document.getElementById('quiz-setup');
     const numQuestionsInput = document.getElementById('num-questions-input');
@@ -11,11 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionCard = document.getElementById('question-card');
     const questionTopic = document.getElementById('question-topic');
     const questionText = document.getElementById('question-text');
+    const flagBtn = document.getElementById('flag-btn');
     const optionsList = document.getElementById('options-list');
     const feedbackContainer = document.getElementById('feedback-container');
     const questionCounter = document.getElementById('question-counter');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
+    const bottomControls = document.querySelector('.bottom-controls');
+    const questionPalette = document.getElementById('question-palette');
 
     // Results
     const resultsContainer = document.getElementById('results-container');
@@ -26,13 +33,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let allQuestions = [];
     let questionsForCurrentQuiz = [];
     let currentQuestionIndex = 0;
-    let answeredQuestions = []; // This will now be an array of result objects
+    let answeredQuestions = [];
+    let flaggedQuestions = [];
+
+    // --- Theme Switcher Logic ---
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            body.classList.add('dark-mode');
+            themeCheckbox.checked = true;
+        } else {
+            body.classList.remove('dark-mode');
+            themeCheckbox.checked = false;
+        }
+    }
+
+    themeCheckbox.addEventListener('change', () => {
+        if (themeCheckbox.checked) {
+            localStorage.setItem('theme', 'dark');
+            applyTheme('dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+            applyTheme('light');
+        }
+    });
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+    // -----------------------------
 
     function initializeQuiz() {
         quizSetup.style.display = 'block';
         progressContainer.style.display = 'none';
         quizContainer.style.display = 'none';
         resultsContainer.style.display = 'none';
+        bottomControls.style.display = 'none';
         if (allQuestions.length > 0) {
             numQuestionsInput.max = allQuestions.length;
             numQuestionsSlider.max = allQuestions.length;
@@ -54,13 +88,46 @@ document.addEventListener('DOMContentLoaded', () => {
     function startQuiz() {
         currentQuestionIndex = 0;
         answeredQuestions = new Array(questionsForCurrentQuiz.length).fill(null);
+        flaggedQuestions = new Array(questionsForCurrentQuiz.length).fill(false);
         
         quizSetup.style.display = 'none';
         resultsContainer.style.display = 'none';
         progressContainer.style.display = 'block';
         quizContainer.style.display = 'block';
+        bottomControls.style.display = 'block';
+        questionPalette.style.display = 'grid';
         
+        renderQuestionPalette();
         displayQuestion();
+    }
+
+    function renderQuestionPalette() {
+        questionPalette.innerHTML = '';
+        questionsForCurrentQuiz.forEach((_, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'palette-btn';
+            btn.textContent = index + 1;
+            btn.dataset.index = index;
+
+            if (flaggedQuestions[index]) {
+                btn.classList.add('flagged');
+            } else {
+                const answered = answeredQuestions[index];
+                if (answered) {
+                    btn.classList.add(answered.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+
+            if (index === currentQuestionIndex) {
+                btn.classList.add('current');
+            }
+
+            btn.addEventListener('click', () => {
+                currentQuestionIndex = index;
+                displayQuestion();
+            });
+            questionPalette.appendChild(btn);
+        });
     }
 
     function displayQuestion() {
@@ -72,6 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
         questionTopic.textContent = question.topic;
         questionText.textContent = question.question;
         optionsList.innerHTML = '';
+
+        flagBtn.classList.toggle('flagged', flaggedQuestions[currentQuestionIndex]);
 
         question.options.forEach(opt => {
             const li = document.createElement('li');
@@ -91,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         questionCard.style.display = 'block';
         updateNavButtons();
+        renderQuestionPalette();
     }
 
     function handleOptionSelect(event) {
@@ -110,28 +180,23 @@ document.addEventListener('DOMContentLoaded', () => {
         optionsList.classList.add('disabled');
         showFeedbackFor(result);
         updateNavButtons();
+        renderQuestionPalette();
     }
 
     function showFeedbackFor(result) {
         const { question, userAnswerLetter, isCorrect } = result;
         const correctAnswer = question.answer.charAt(0);
 
-        // Highlight options
         optionsList.querySelectorAll('li').forEach(li => {
             const optionLetter = li.dataset.option;
-            if (optionLetter === correctAnswer) {
-                li.classList.add('correct');
-            }
-            if (optionLetter === userAnswerLetter && !isCorrect) {
-                li.classList.add('incorrect');
-            }
+            if (optionLetter === correctAnswer) li.classList.add('correct');
+            if (optionLetter === userAnswerLetter && !isCorrect) li.classList.add('incorrect');
         });
 
         let headerClass = isCorrect ? 'correct' : 'incorrect';
         let headerText = isCorrect ? 'Correct!' : `Incorrect. The correct answer was ${correctAnswer}).`;
 
-        let explanationHtml = `<div class="explanation-content">...</div>`; // Full explanation logic here
-        explanationHtml = `<div class="explanation-content">
+        let explanationHtml = `<div class="explanation-content">
             <h4>Explanation</h4><p><strong>${question.answer}</strong> is correct because: ${question.explanation.correct}</p>
             ${question.explanation.incorrect ? `<h5>Why the others are incorrect:</h5><ul>${Object.entries(question.explanation.incorrect).map(([key, value]) => `<li><strong>${key}):</strong> ${value}</li>`).join('')}</ul>` : ''}
             ${question.memory_aid ? `<p class="memory-aid"><strong>Memory Aid:</strong> ${question.memory_aid}</p>` : ''}
@@ -160,16 +225,20 @@ document.addEventListener('DOMContentLoaded', () => {
         quizContainer.style.display = 'none';
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
+        bottomControls.style.display = 'none';
         resultsContainer.style.display = 'block';
 
         const score = answeredQuestions.filter(a => a && a.isCorrect).length;
         scoreText.textContent = `Your Final Score: ${score} out of ${questionsForCurrentQuiz.length} (${((score / questionsForCurrentQuiz.length) * 100).toFixed(2)}%)`;
         
         summaryContainer.innerHTML = '<h3>Review Your Answers:</h3>';
-        answeredQuestions.forEach(result => {
+        answeredQuestions.forEach((result, index) => {
             if (!result) return;
             const resultCard = document.createElement('div');
             resultCard.className = 'result-card';
+            if (flaggedQuestions[index]) {
+                resultCard.innerHTML += `<p><strong>🚩 Flagged for Review</strong></p>`;
+            }
             
             let summaryHtml = `<p><strong>Question:</strong> ${result.question.question}</p><ul>`;
             result.question.options.forEach(opt => {
@@ -179,17 +248,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (optionLetter === result.userAnswerLetter && !result.isCorrect) className = 'incorrect';
                 summaryHtml += `<li class="${className}">${opt}</li>`;
             });
-            summaryHtml += `</ul><div class="explanation-content">...</div>`; // Full explanation
-            summaryHtml += `<div class="explanation-content">
+            summaryHtml += `</ul><div class="explanation-content">
                 <h4>Explanation</h4><p>${result.question.explanation.correct}</p>
                 ${result.question.explanation.incorrect ? `<h5>Why the others are incorrect:</h5><ul>${Object.entries(result.question.explanation.incorrect).map(([key, value]) => `<li><strong>${key}):</strong> ${value}</li>`).join('')}</ul>` : ''}
                 ${result.question.memory_aid ? `<p class="memory-aid"><strong>Memory Aid:</strong> ${result.question.memory_aid}</p>` : ''}
             </div>`;
 
-            resultCard.innerHTML = summaryHtml;
+            resultCard.innerHTML += summaryHtml;
             summaryContainer.appendChild(resultCard);
         });
     }
+
+    flagBtn.addEventListener('click', () => {
+        flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
+        flagBtn.classList.toggle('flagged', flaggedQuestions[currentQuestionIndex]);
+        renderQuestionPalette();
+    });
 
     startQuizBtn.addEventListener('click', () => {
         const num = parseInt(numQuestionsInput.value, 10);
