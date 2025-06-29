@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizContainer.style.display = 'none';
         resultsContainer.style.display = 'none';
         bottomControls.style.display = 'none';
+        bottomControls.style.visibility = 'hidden';
         if (allQuestions.length > 0) {
             numQuestionsInput.max = allQuestions.length;
             numQuestionsSlider.max = allQuestions.length;
@@ -107,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressContainer.style.display = 'block';
         quizContainer.style.display = 'block';
         bottomControls.style.display = 'block';
+        bottomControls.style.visibility = 'visible';
         questionPalette.style.display = 'grid';
         document.getElementById('palette-pagination').style.display = 'flex';
         

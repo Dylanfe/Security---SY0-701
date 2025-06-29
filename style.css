@@ -232,6 +232,7 @@ input:checked + .slider:before {
     height: 100%;
     z-index: 1000;
     display: none; /* Hidden by default, shown by JS */
+    visibility: hidden; /* Additional hiding to prevent flash */
     background-color: var(--palette-bg);
     border-right: 1px solid var(--palette-border);
     box-shadow: 2px 0 5px rgba(0,0,0,0.05);
@@ -731,6 +732,10 @@ body.dark-mode #summary-container .result-card li.incorrect {
 }
 
 /* Study Guide Layout */
+#study-guide-mode {
+    display: none; /* Initially hidden to prevent flash on page load */
+}
+
 .study-guide-layout {
     display: flex;
     height: calc(100vh - 120px);
