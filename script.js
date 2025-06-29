@@ -18,11 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const flagBtn = document.getElementById('flag-btn');
     const optionsList = document.getElementById('options-list');
     const feedbackContainer = document.getElementById('feedback-container');
+    const studyGuideContainer = document.getElementById('study-guide-container');
+    const studyGuideToggle = document.getElementById('study-guide-toggle');
+    const studyGuideContent = document.getElementById('study-guide-content');
     const questionCounter = document.getElementById('question-counter');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const bottomControls = document.querySelector('.bottom-controls');
     const questionPalette = document.getElementById('question-palette');
+    const palettePrevBtn = document.getElementById('palette-prev-btn');
+    const paletteNextBtn = document.getElementById('palette-next-btn');
+    const palettePageInfo = document.getElementById('palette-page-info');
 
     // Results
     const resultsContainer = document.getElementById('results-container');
@@ -35,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     let answeredQuestions = [];
     let flaggedQuestions = [];
+    let palettePage = 0;
+    const questionsPerPage = 13; // Approx 1 row of 13 questions
 
     // --- Theme Switcher Logic ---
     function applyTheme(theme) {
@@ -87,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startQuiz() {
         currentQuestionIndex = 0;
+        palettePage = 0;
         answeredQuestions = new Array(questionsForCurrentQuiz.length).fill(null);
         flaggedQuestions = new Array(questionsForCurrentQuiz.length).fill(false);
         
@@ -96,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizContainer.style.display = 'block';
         bottomControls.style.display = 'block';
         questionPalette.style.display = 'grid';
+        document.getElementById('palette-pagination').style.display = 'flex';
         
         renderQuestionPalette();
         displayQuestion();
@@ -103,36 +113,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderQuestionPalette() {
         questionPalette.innerHTML = '';
-        questionsForCurrentQuiz.forEach((_, index) => {
+        const totalPages = Math.ceil(questionsForCurrentQuiz.length / questionsPerPage);
+        const start = palettePage * questionsPerPage;
+        const end = start + questionsPerPage;
+        const pageQuestions = questionsForCurrentQuiz.slice(start, end);
+
+        pageQuestions.forEach((_, index) => {
+            const actualIndex = start + index;
             const btn = document.createElement('button');
             btn.className = 'palette-btn';
-            btn.textContent = index + 1;
-            btn.dataset.index = index;
+            btn.textContent = actualIndex + 1;
+            btn.dataset.index = actualIndex;
 
-            if (flaggedQuestions[index]) {
+            if (flaggedQuestions[actualIndex]) {
                 btn.classList.add('flagged');
             } else {
-                const answered = answeredQuestions[index];
+                const answered = answeredQuestions[actualIndex];
                 if (answered) {
                     btn.classList.add(answered.isCorrect ? 'correct' : 'incorrect');
                 }
             }
 
-            if (index === currentQuestionIndex) {
+            if (actualIndex === currentQuestionIndex) {
                 btn.classList.add('current');
             }
 
             btn.addEventListener('click', () => {
-                currentQuestionIndex = index;
+                currentQuestionIndex = actualIndex;
                 displayQuestion();
             });
             questionPalette.appendChild(btn);
         });
+
+        palettePageInfo.textContent = `Page ${palettePage + 1} of ${totalPages}`;
+        palettePrevBtn.disabled = palettePage === 0;
+        paletteNextBtn.disabled = palettePage >= totalPages - 1;
     }
 
     function displayQuestion() {
         feedbackContainer.style.display = 'none';
         feedbackContainer.innerHTML = '';
+        studyGuideContainer.style.display = 'none';
+        studyGuideContent.style.display = 'none';
         
         const question = questionsForCurrentQuiz[currentQuestionIndex];
         questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questionsForCurrentQuiz.length}`;
@@ -206,6 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         feedbackContainer.innerHTML = feedbackHtml;
         feedbackContainer.style.display = 'block';
+
+        if (studyGuideData[question.topic]) {
+            studyGuideContent.innerHTML = studyGuideData[question.topic];
+            studyGuideContainer.style.display = 'block';
+        }
     }
 
     function updateNavButtons() {
@@ -263,6 +290,27 @@ document.addEventListener('DOMContentLoaded', () => {
         flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
         flagBtn.classList.toggle('flagged', flaggedQuestions[currentQuestionIndex]);
         renderQuestionPalette();
+    });
+
+    studyGuideToggle.addEventListener('click', () => {
+        const isHidden = studyGuideContent.style.display === 'none';
+        studyGuideContent.style.display = isHidden ? 'block' : 'none';
+        studyGuideToggle.textContent = isHidden ? 'Hide Study Guide' : 'View in Study Guide';
+    });
+
+    palettePrevBtn.addEventListener('click', () => {
+        if (palettePage > 0) {
+            palettePage--;
+            renderQuestionPalette();
+        }
+    });
+
+    paletteNextBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(questionsForCurrentQuiz.length / questionsPerPage);
+        if (palettePage < totalPages - 1) {
+            palettePage++;
+            renderQuestionPalette();
+        }
     });
 
     startQuizBtn.addEventListener('click', () => {
