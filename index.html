@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SY0-701 Security+ Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SY0-701 Security+ Practice Quiz</h1>
+
+        <div id="quiz-setup">
+            <h2>Quiz Setup</h2>
+            <label for="num-questions-slider">How many questions would you like to answer?</label>
+            <div class="slider-container">
+                <input type="range" id="num-questions-slider" min="1" value="10">
+                <input type="number" id="num-questions-input" min="1" value="10" placeholder="Enter number of questions" title="Number of questions">
+            </div>
+            <button id="start-quiz-btn">Start Quiz</button>
+        </div>
+
+        <div id="progress-container" style="display: none;">
+            <p id="question-counter"></p>
+        </div>
+        <div id="quiz-container" style="display: none;">
+            <div id="question-card" class="question-card" style="display: none;">
+                <h2 id="question-topic"></h2>
+                <h3 id="question-text"></h3>
+                <ul id="options-list" class="options-list"></ul>
+            </div>
+            <div id="feedback-container"></div>
+        </div>
+        <div id="navigation-buttons">
+            <button id="prev-btn" style="display: none;">Previous Question</button>
+            <button id="next-btn" style="display: none;">Next Question</button>
+        </div>
+        <div id="results-container" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <p id="score-text"></p>
+            <div id="summary-container"></div>
+            <button id="restart-btn">Restart Quiz</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
