@@ -222,8 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let headerText = isCorrect ? 'Correct!' : `Incorrect. The correct answer was ${correctAnswer}).`;
 
         let explanationHtml = `<div class="explanation-content">
-            <h4>Explanation</h4><p><strong>${question.answer}</strong> is correct because: ${question.explanation.correct}</p>
-            ${question.explanation.incorrect ? `<h5>Why the others are incorrect:</h5><ul>${Object.entries(question.explanation.incorrect).map(([key, value]) => `<li><strong>${key}):</strong> ${value}</li>`).join('')}</ul>` : ''}
+            <h4>Explanation</h4><p><strong class="correct-answer">${question.answer}</strong> is correct because: ${question.explanation.correct}</p>
+            ${question.explanation.incorrect ? `<h5>Why the others are incorrect:</h5><ul>${Object.entries(question.explanation.incorrect).map(([key, value]) => `<li><strong class="incorrect-answer">${key}):</strong> ${value}</li>`).join('')}</ul>` : ''}
             ${question.memory_aid ? `<p class="memory-aid"><strong>Memory Aid:</strong> ${question.memory_aid}</p>` : ''}
         </div>`;
 
@@ -233,7 +233,18 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackContainer.style.display = 'block';
 
         if (studyGuideData[question.topic]) {
-            studyGuideContent.innerHTML = studyGuideData[question.topic];
+            let studyGuideHtml = studyGuideData[question.topic];
+            const keyTerms = (question.key_terms || []).concat(question.answer);
+            
+            function escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+            }
+
+            keyTerms.forEach(term => {
+                const regex = new RegExp(`\\b(${escapeRegExp(term)})\\b`, 'gi');
+                studyGuideHtml = studyGuideHtml.replace(regex, '<span class="key-term">$1</span>');
+            });
+            studyGuideContent.innerHTML = studyGuideHtml;
             studyGuideContainer.style.display = 'block';
         }
     }
