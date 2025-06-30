@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paletteNextBtn = document.getElementById('palette-next-btn');
     const palettePageInfo = document.getElementById('palette-page-info');
     const paletteToggleBtn = document.getElementById('palette-toggle-btn');
+    const paletteCloseBtn = document.getElementById('palette-close-btn');
 
     // Results
     const resultsContainer = document.getElementById('results-container');
@@ -252,9 +253,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateNavButtons() {
-        prevBtn.style.display = 'block';
+        // Hide previous button on first question, show and enable on others
+        if (currentQuestionIndex === 0) {
+            prevBtn.style.display = 'none';
+        } else {
+            prevBtn.style.display = 'block';
+            prevBtn.disabled = false;
+        }
+        
         nextBtn.style.display = 'block';
-        prevBtn.disabled = currentQuestionIndex === 0;
         
         if (currentQuestionIndex === questionsForCurrentQuiz.length - 1) {
             nextBtn.textContent = 'Finish Quiz';
@@ -317,6 +324,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     paletteToggleBtn.addEventListener('click', () => {
         bottomControls.classList.toggle('open');
+        // Hide the toggle button when palette is open, show when closed
+        if (bottomControls.classList.contains('open')) {
+            paletteToggleBtn.style.display = 'none';
+        } else {
+            paletteToggleBtn.style.display = 'block';
+        }
+    });
+
+    paletteCloseBtn.addEventListener('click', () => {
+        bottomControls.classList.remove('open');
+        paletteToggleBtn.style.display = 'block';
     });
 
     palettePrevBtn.addEventListener('click', () => {

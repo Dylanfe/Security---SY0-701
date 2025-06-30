@@ -10,19 +10,21 @@
     <button id="palette-toggle-btn">☰</button>
     <div class="container">
         <div class="header-controls">
-            <h1>SY0-701 Security+ Practice Quiz</h1>
-            <div class="mode-switcher">
-                <button id="quiz-mode-btn" class="mode-btn active">Quiz Mode</button>
-                <button id="study-guide-mode-btn" class="mode-btn">Study Guide</button>
-            </div>
-            <div class="theme-switcher-container">
-                <label class="theme-switcher" for="theme-checkbox" title="Toggle dark mode">
-                    <input type="checkbox" id="theme-checkbox" title="Theme switcher" />
-                    <div class="slider round">
-                        <span class="sun-svg"><!-- Sun SVG --></span>
-                        <span class="moon-svg"><!-- Moon SVG --></span>
-                    </div>
-                </label>
+            <h1>SY0-701 Practice Quiz</h1>
+            <div class="mobile-controls">
+                <div class="mode-switcher">
+                    <button id="quiz-mode-btn" class="mode-btn active">Quiz Mode</button>
+                    <button id="study-guide-mode-btn" class="mode-btn">Study Guide</button>
+                </div>
+                <div class="theme-switcher-container">
+                    <label class="theme-switcher" for="theme-checkbox" title="Toggle dark mode">
+                        <input type="checkbox" id="theme-checkbox" title="Theme switcher" />
+                        <div class="slider round">
+                            <span class="sun-svg"><!-- Sun SVG --></span>
+                            <span class="moon-svg"><!-- Moon SVG --></span>
+                        </div>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -148,6 +150,10 @@
 
     <div class="bottom-controls">
         <div class="palette-content">
+            <div class="palette-header">
+                <span class="palette-title">Question Bank</span>
+                <button id="palette-close-btn">×</button>
+            </div>
             <div id="question-palette" style="display: none;"></div>
             <div id="palette-pagination">
                 <button id="palette-prev-btn"><</button>
