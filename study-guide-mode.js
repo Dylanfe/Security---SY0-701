@@ -400,6 +400,48 @@ document.addEventListener('DOMContentLoaded', () => {
         notesBtn.classList.remove('active');
     });
 
+    // Mobile Navigation Toggle Functionality
+    const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+    const studySidebar = document.getElementById('study-sidebar');
+
+    if (mobileNavToggle && studySidebar) {
+        // Show toggle button on mobile
+        function updateMobileNavVisibility() {
+            if (window.innerWidth <= 768 && currentMode === 'study-guide') {
+                mobileNavToggle.style.display = 'block';
+                studySidebar.classList.add('collapsed');
+            } else {
+                mobileNavToggle.style.display = 'none';
+                studySidebar.classList.remove('collapsed');
+            }
+        }
+
+        // Handle toggle button click
+        mobileNavToggle.addEventListener('click', () => {
+            studySidebar.classList.toggle('collapsed');
+            mobileNavToggle.classList.toggle('open');
+            
+            if (studySidebar.classList.contains('collapsed')) {
+                mobileNavToggle.textContent = '📚 Study Navigation';
+            } else {
+                mobileNavToggle.textContent = '📚 Hide Navigation';
+            }
+        });
+
+        // Update on window resize
+        window.addEventListener('resize', updateMobileNavVisibility);
+        
+        // Initial check
+        updateMobileNavVisibility();
+        
+        // Update when switching to study guide mode
+        const originalSwitchToStudyGuide = switchToStudyGuideMode;
+        switchToStudyGuideMode = function() {
+            originalSwitchToStudyGuide();
+            setTimeout(updateMobileNavVisibility, 100);
+        };
+    }
+
     // Make loadObjective globally available for search results
     window.loadObjective = loadObjective;
 });

@@ -70,8 +70,12 @@
         <!-- Study Guide Mode -->
         <div id="study-guide-mode" style="display: none;">
             <div class="study-guide-layout">
-                <div class="study-guide-sidebar">
+                <button class="mobile-study-nav-toggle" id="mobile-nav-toggle" style="display: none;">
+                    📚 Study Navigation
+                </button>
+                <div class="study-guide-sidebar" id="study-sidebar">
                     <div class="study-guide-search">
+                        <h3>Search</h3>
                         <input type="text" id="study-search" placeholder="Search study guide..." />
                         <button id="search-btn">🔍</button>
                     </div>
@@ -89,6 +93,7 @@
                         </div>
                     </div>
                     <div class="study-guide-nav">
+                        <h3>Navigation</h3>
                         <div id="study-nav-tree"></div>
                     </div>
                 </div>
