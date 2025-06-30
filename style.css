@@ -1201,6 +1201,28 @@ body.dark-mode .objective-item.studied {
 }
 
 @media (max-width: 768px) {
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        padding: 0;
+        overflow-x: hidden;
+    }
+    
+    body.quiz-active {
+        padding-left: 0;
+    }
+    
+    .container {
+        margin: 0;
+        padding: 10px;
+        max-width: none;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    
     #palette-toggle-btn {
         display: block;
     }
@@ -1232,31 +1254,180 @@ body.dark-mode .objective-item.studied {
         flex-shrink: 0;
     }
     
+    /* Header improvements */
+    .header-controls {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    h1 {
+        font-size: 1.2em;
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    .mode-switcher {
+        flex-direction: row;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .mode-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+        flex: 1;
+    }
+    
+    /* Quiz setup improvements */
+    #quiz-setup {
+        padding: 20px 15px;
+        margin-bottom: 15px;
+    }
+    
+    #quiz-setup h2 {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+    
+    #quiz-setup label {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+    
+    .slider-container {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .slider-container input[type="range"] {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .slider-container input[type="number"] {
+        width: 100px;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+    
+    #quiz-setup button {
+        padding: 12px 20px;
+        font-size: 16px;
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    /* Question card improvements */
+    .question-card {
+        padding: 15px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .question-header {
+        gap: 10px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    .question-card h2 {
+        font-size: 0.9em;
+        margin-bottom: 10px;
+        word-wrap: break-word;
+    }
+    
+    .question-card h3 {
+        font-size: 1.1em;
+        line-height: 1.3;
+        margin-bottom: 15px;
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    #flag-btn {
+        font-size: 1.3em;
+        padding: 5px;
+        min-width: 35px;
+        height: 35px;
+        flex-shrink: 0;
+    }
+    
+    /* Options list improvements */
+    .options-list {
+        box-sizing: border-box;
+        width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .options-list li {
+        padding: 12px;
+        margin-bottom: 10px;
+        font-size: 1em;
+        line-height: 1.4;
+        border-radius: 8px;
+        touch-action: manipulation;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    /* Progress and navigation improvements */
+    #progress-container {
+        font-size: 1em;
+        margin-bottom: 10px;
+        padding: 0 5px;
+    }
+    
+    #navigation-buttons {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        padding: 0 5px;
+    }
+    
+    #prev-btn, #next-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        touch-action: manipulation;
+    }
+    
     /* Study Guide Responsive */
     .study-guide-layout {
         flex-direction: column;
         height: auto;
+        gap: 15px;
     }
     
     .study-guide-sidebar {
         width: 100%;
         max-height: 300px;
+        margin-bottom: 0;
+        padding: 15px;
+    }
+    
+    .study-guide-main {
         margin-bottom: 20px;
-    }
-    
-    .mode-switcher {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .header-controls {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
     }
     
     .domain-cards {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .domain-card {
+        padding: 15px;
     }
 }
 
