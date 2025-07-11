@@ -7,7 +7,7 @@ A comprehensive web-based application for studying and practicing for the CompTI
 ### 🎯 Quiz Mode
 - **Customizable Practice Quizzes**: Select from 1 to 200 questions
 - **Interactive Question Interface**: Multiple-choice questions with immediate feedback
-- **Audio Narration**: Text-to-speech functionality with real-time word highlighting (requires ElevenLabs API)
+- **Audio Narration**: Text-to-speech functionality with real-time word highlighting
 - **Progress Tracking**: Visual progress bar and question palette
 - **Question Flagging**: Mark questions for review during the quiz
 - **Detailed Explanations**: Comprehensive explanations for correct and incorrect answers
@@ -48,17 +48,11 @@ A comprehensive web-based application for studying and practicing for the CompTI
 ### Prerequisites
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - No additional software or server required
-- **Optional**: ElevenLabs API for high-quality text-to-speech audio narration
 
 ### Installation
 1. Clone or download this repository
-2. **Optional Audio Setup**: 
-   - Sign up for a free [ElevenLabs](https://elevenlabs.io/) account
-   - Get your API key from the ElevenLabs dashboard
-   - Add the API key as a GitHub Secret named `ELEVENLABS_API_KEY` for deployment
-   - Or create a local `config.js` file with your API key for local development
-3. Open `index.html` in your web browser
-4. Start studying immediately - no setup required!
+2. Open `index.html` in your web browser
+3. Start studying immediately - no setup required!
 
 ### Usage
 
