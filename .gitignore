@@ -108,3 +108,6 @@ settings.local.json
 # User-specific files
 user-preferences.json
 personal-notes.json
+
+# Application-specific
+config.js

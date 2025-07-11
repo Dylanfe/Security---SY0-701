@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionCard = document.getElementById('question-card');
     const questionTopic = document.getElementById('question-topic');
     const questionText = document.getElementById('question-text');
+    const readAloudBtn = document.getElementById('read-aloud-btn');
     const flagBtn = document.getElementById('flag-btn');
     const optionsList = document.getElementById('options-list');
     const feedbackContainer = document.getElementById('feedback-container');
@@ -506,6 +507,180 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     restartBtn.addEventListener('click', initializeQuiz);
+
+    readAloudBtn.addEventListener('click', () => {
+        const text = questionText.textContent;
+        if (text) {
+            readAloud(text);
+        }
+    });
+
+    async function readAloud(text) {
+        try {
+            readAloudBtn.disabled = true;
+            readAloudBtn.classList.add('active');
+
+            // Check if ElevenLabs API key is available first (prioritize high-quality voice)
+            if (typeof config !== 'undefined' && config.elevenLabsApiKey) {
+                // Use ElevenLabs for high-quality voice, browser speech synthesis for word highlighting
+                const apiKey = config.elevenLabsApiKey;
+                const voiceId = 'UgBBYS2sOqTuMpoF3BR0'; // Mark's voice ID
+                const ttsUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'xi-api-key': apiKey,
+                    'Accept': 'audio/mpeg'
+                };
+
+                const data = {
+                    text: text,
+                    model_id: 'eleven_monolingual_v1',
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.5
+                    }
+                };
+
+                // Get ElevenLabs audio
+                const audioResponse = await fetch(ttsUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+
+                if (!audioResponse.ok) {
+                    throw new Error(`Audio fetch failed with status: ${audioResponse.status}`);
+                }
+
+                const audioBlob = await audioResponse.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Prepare text for highlighting
+                const originalText = questionText.textContent;
+                const words = originalText.split(/(\s+)/).filter(word => word.trim().length > 0);
+                questionText.innerHTML = originalText.split(/(\s+)/).map(part => 
+                    part.trim().length > 0 ? `<span>${part}</span>` : part
+                ).join('');
+                const wordSpans = Array.from(questionText.querySelectorAll('span'));
+
+                // Use browser speech synthesis silently for word boundaries, but play ElevenLabs audio
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.volume = 0; // Mute the browser speech
+                utterance.rate = 0.9;
+
+                const audio = new Audio(audioUrl);
+                let currentWordIndex = 0;
+
+                utterance.onboundary = (event) => {
+                    if (event.name === 'word') {
+                        // Remove highlight from previous word
+                        if (currentWordIndex > 0 && wordSpans[currentWordIndex - 1]) {
+                            wordSpans[currentWordIndex - 1].classList.remove('highlight');
+                        }
+                        
+                        // Highlight current word
+                        if (currentWordIndex < wordSpans.length && wordSpans[currentWordIndex]) {
+                            wordSpans[currentWordIndex].classList.add('highlight');
+                            currentWordIndex++;
+                        }
+                    }
+                };
+
+                // Start both audio and silent speech synthesis for timing
+                audio.play();
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.speak(utterance);
+                }
+
+                audio.onended = () => {
+                    speechSynthesis.cancel(); // Stop the silent speech
+                    wordSpans.forEach(span => span.classList.remove('highlight'));
+                    readAloudBtn.disabled = false;
+                    readAloudBtn.classList.remove('active');
+                    questionText.innerHTML = originalText;
+                };
+
+                audio.onerror = () => {
+                    speechSynthesis.cancel();
+                    readAloudBtn.disabled = false;
+                    readAloudBtn.classList.remove('active');
+                    questionText.innerHTML = originalText;
+                    alert('Error playing audio.');
+                };
+
+            } else if ('speechSynthesis' in window) {
+                // Fallback to browser speech synthesis if no ElevenLabs API key
+                const originalText = questionText.textContent;
+                const words = originalText.split(/(\s+)/).filter(word => word.trim().length > 0);
+                questionText.innerHTML = originalText.split(/(\s+)/).map(part => 
+                    part.trim().length > 0 ? `<span>${part}</span>` : part
+                ).join('');
+                const wordSpans = Array.from(questionText.querySelectorAll('span'));
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Try to find a more natural voice
+                const voices = speechSynthesis.getVoices();
+                const preferredVoice = voices.find(voice => 
+                    voice.name.includes('Google') || 
+                    voice.name.includes('Microsoft') ||
+                    voice.name.includes('Natural') ||
+                    voice.name.includes('Enhanced')
+                ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+                
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                let currentWordIndex = 0;
+
+                utterance.onboundary = (event) => {
+                    if (event.name === 'word') {
+                        // Remove highlight from previous word
+                        if (currentWordIndex > 0 && wordSpans[currentWordIndex - 1]) {
+                            wordSpans[currentWordIndex - 1].classList.remove('highlight');
+                        }
+                        
+                        // Highlight current word
+                        if (currentWordIndex < wordSpans.length && wordSpans[currentWordIndex]) {
+                            wordSpans[currentWordIndex].classList.add('highlight');
+                            currentWordIndex++;
+                        }
+                    }
+                };
+
+                utterance.onend = () => {
+                    wordSpans.forEach(span => span.classList.remove('highlight'));
+                    readAloudBtn.disabled = false;
+                    readAloudBtn.classList.remove('active');
+                    questionText.innerHTML = originalText;
+                };
+
+                utterance.onerror = () => {
+                    readAloudBtn.disabled = false;
+                    readAloudBtn.classList.remove('active');
+                    questionText.innerHTML = originalText;
+                    alert('Error with speech synthesis.');
+                };
+
+                speechSynthesis.speak(utterance);
+            } else {
+                throw new Error('Text-to-speech not supported in this browser');
+            }
+
+        } catch (error) {
+            console.error('Error with text-to-speech:', error);
+            alert(`Sorry, there was an error reading the question aloud: ${error.message}`);
+            readAloudBtn.disabled = false;
+            readAloudBtn.classList.remove('active');
+            questionText.innerHTML = questionText.textContent;
+        }
+    }
 
     fetch('sy0-701-questions.json')
         .then(response => response.json())

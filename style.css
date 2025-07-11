@@ -442,6 +442,35 @@ body.dark-mode .palette-btn.flagged {
     flex-grow: 1;
 }
 
+#question-text span.highlight {
+    color: var(--button-bg);
+    font-weight: bold;
+    transform: scale(1.05);
+    transition: all 0.15s ease;
+}
+
+#read-aloud-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: var(--text-color);
+    transition: color 0.2s;
+}
+
+#read-aloud-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+#read-aloud-btn:hover {
+    color: var(--button-bg);
+}
+
+#read-aloud-btn.active {
+    color: var(--button-bg);
+}
+
 #flag-btn {
     background: none;
     border: 1px solid transparent;
