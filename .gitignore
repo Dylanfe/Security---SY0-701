@@ -110,4 +110,4 @@ user-preferences.json
 personal-notes.json
 
 # Application-specific
-config.js
+api-inject.js

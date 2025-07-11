@@ -20,12 +20,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create config.js with API key
+      - name: Inject API key into environment
         run: |
-          echo "const config = {" > config.js
-          echo "  elevenLabsApiKey: '${{ secrets.ELEVENLABS_API_KEY }}'" >> config.js
-          echo "};" >> config.js
-          cat config.js
+          # Create a script that injects the API key at runtime
+          echo "<script>" > api-inject.js
+          echo "window.ELEVENLABS_API_KEY = '${{ secrets.ELEVENLABS_API_KEY }}';" >> api-inject.js
+          echo "</script>" >> api-inject.js
+          cat api-inject.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
