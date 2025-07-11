@@ -22,10 +22,12 @@ jobs:
 
       - name: Inject API key into environment
         run: |
-          # Create a script that injects the API key at runtime
-          echo "// Auto-generated API key injection" > api-inject.js
-          echo "window.ELEVENLABS_API_KEY = '${{ secrets.ELEVENLABS_API_KEY }}';" >> api-inject.js
-          cat api-inject.js
+          # Replace the null value in config.js with the actual API key
+          sed -i "s/elevenLabsApiKey: (typeof window !== 'undefined' && window.ELEVENLABS_API_KEY) || null/elevenLabsApiKey: '${{ secrets.ELEVENLABS_API_KEY }}'/g" config.js
+          echo "Updated config.js:"
+          cat config.js
+          echo "Files in directory:"
+          ls -la
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
