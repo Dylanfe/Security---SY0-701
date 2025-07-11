@@ -1,12 +1,11 @@
 // Configuration file for the Security+ Quiz Application
-// This file safely references environment variables without exposing secrets
+// Basic configuration without external API dependencies
 
 const config = {
-    // ElevenLabs API key - will be injected at build time by GitHub Actions
-    elevenLabsApiKey: (typeof window !== 'undefined' && window.ELEVENLABS_API_KEY) || null
+    // Application settings can be added here as needed
 };
 
-// For development: you can create a config.local.js file with your API key
+// For development: you can create a config.local.js file with local settings
 // and it will be ignored by git due to .gitignore
 try {
     if (typeof configLocal !== 'undefined') {
