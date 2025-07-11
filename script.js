@@ -486,7 +486,13 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('No questions found for the selected objective.');
             return;
         }
-        questionsForCurrentQuiz = filteredQuestions.sort(() => Math.random() - 0.5).slice(0, num);
+        // Use Fisher-Yates shuffle for truly random question selection
+        const shuffled = [...filteredQuestions];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        questionsForCurrentQuiz = shuffled.slice(0, num);
         startQuiz();
     });
 
