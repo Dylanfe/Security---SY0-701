@@ -1212,6 +1212,57 @@ body.dark-mode .objective-item.studied {
     background-color: var(--option-hover-bg);
 }
 
+#objective-dropdown-container {
+  margin: 1em 0;
+  position: relative;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+  /* width: 100%; removed to keep wrapper as wide as select */
+}
+
+#objective-dropdown {
+  width: 330px;
+  min-width: 300px;
+  padding: 0.18em 2.2em 0.18em 0.7em; /* extra right padding for arrow */
+  border: 1.2px solid #bbb;
+  border-radius: 5px;
+  font-size: 1em;
+  font-family: inherit;
+  background: #f9f9fc;
+  box-shadow: 0 1px 4px rgba(60,60,90,0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  outline: none;
+  background-image: none;
+}
+
+.dropdown-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0.7em;
+  width: 1em;
+  height: 1em;
+  pointer-events: none;
+  transform: translateY(-50%);
+  background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 7.5L9 12L13.5 7.5" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-size: 1em 1em;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#objective-dropdown option {
+  padding: 0.18em 0.5em;
+  background-image: none !important;
+}
+
+select:focus > option {
+  background-image: none !important;
+}
+
 @media (max-width: 1200px) and (min-width: 769px) {
     body.quiz-active {
         padding-left: 280px;
