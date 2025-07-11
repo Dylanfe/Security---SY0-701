@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let palettePage = 0;
     const questionsPerPage = 50;
     let allObjectives = [];
+    let currentAudioUtterance = null;
+    let currentHighlightInterval = null;
+    let currentQuestionTextOriginal = '';
 
     // Official Security+ (V7) objectives with titles, descriptions, and topic mapping
     const officialObjectives = [
@@ -186,6 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // -----------------------------
 
     function initializeQuiz() {
+        // Stop any audio when returning to menu
+        stopCurrentAudio();
+        
         body.classList.remove('quiz-active');
         quizSetup.style.display = 'block';
         progressContainer.style.display = 'none';
@@ -270,7 +276,41 @@ document.addEventListener('DOMContentLoaded', () => {
         paletteNextBtn.disabled = palettePage >= totalPages - 1;
     }
 
+    function stopCurrentAudio() {
+        // Stop speech synthesis immediately
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        
+        // Stop ResponsiveVoice if it's playing
+        if (typeof responsiveVoice !== 'undefined' && responsiveVoice.isPlaying()) {
+            responsiveVoice.cancel();
+        }
+        
+        // Clear any highlighting intervals
+        if (currentHighlightInterval) {
+            clearInterval(currentHighlightInterval);
+            currentHighlightInterval = null;
+        }
+        
+        // Reset button state
+        readAloudBtn.disabled = false;
+        readAloudBtn.classList.remove('active');
+        readAloudBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+        
+        // Restore text from stored original, never from DOM
+        if (currentQuestionTextOriginal) {
+            questionText.innerHTML = '';
+            questionText.textContent = currentQuestionTextOriginal;
+        }
+        
+        console.log('Audio stopped and UI reset');
+    }
+
     function displayQuestion() {
+        // Stop any currently playing audio when changing questions
+        stopCurrentAudio();
+        
         feedbackContainer.style.display = 'none';
         feedbackContainer.innerHTML = '';
         studyGuideContainer.style.display = 'none';
@@ -279,7 +319,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const question = questionsForCurrentQuiz[currentQuestionIndex];
         questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questionsForCurrentQuiz.length}`;
         questionTopic.textContent = question.topic;
-        questionText.textContent = question.question;
+        
+        // Store the original question text globally to prevent corruption
+        currentQuestionTextOriginal = question.question;
+        
+        // Always set the question text directly from the data source to prevent corruption
+        questionText.innerHTML = '';
+        questionText.textContent = currentQuestionTextOriginal;
+        
         optionsList.innerHTML = '';
 
         flagBtn.classList.toggle('flagged', flaggedQuestions[currentQuestionIndex]);
@@ -515,7 +562,9 @@ document.addEventListener('DOMContentLoaded', () => {
     restartBtn.addEventListener('click', initializeQuiz);
 
     readAloudBtn.addEventListener('click', () => {
-        const text = questionText.textContent;
+        // Get text directly from the question data source, not from DOM
+        const question = questionsForCurrentQuiz[currentQuestionIndex];
+        const text = question ? question.question : questionText.textContent;
         if (text) {
             readAloud(text);
         }
@@ -528,10 +577,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Use browser speech synthesis with word highlighting
             if ('speechSynthesis' in window) {
-                // Browser speech synthesis with word highlighting
-                const originalText = questionText.textContent;
-                const words = originalText.split(/(\s+)/).filter(word => word.trim().length > 0);
-                questionText.innerHTML = originalText.split(/(\s+)/).map(part => 
+                // Use the stored original text to ensure consistency
+                const originalQuestionText = currentQuestionTextOriginal || text;
+                
+                // Create word highlighting based on original question text
+                const words = originalQuestionText.split(/(\s+)/).filter(word => word.trim().length > 0);
+                questionText.innerHTML = originalQuestionText.split(/(\s+)/).map(part => 
                     part.trim().length > 0 ? `<span>${part}</span>` : part
                 ).join('');
                 const wordSpans = Array.from(questionText.querySelectorAll('span'));
@@ -576,14 +627,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     wordSpans.forEach(span => span.classList.remove('highlight'));
                     readAloudBtn.disabled = false;
                     readAloudBtn.classList.remove('active');
-                    questionText.innerHTML = originalText;
+                    // Always restore from stored original text
+                    questionText.innerHTML = '';
+                    questionText.textContent = currentQuestionTextOriginal;
                 };
 
                 utterance.onerror = () => {
+                    wordSpans.forEach(span => span.classList.remove('highlight'));
                     readAloudBtn.disabled = false;
                     readAloudBtn.classList.remove('active');
-                    questionText.innerHTML = originalText;
-                    alert('Error with speech synthesis.');
+                    // Always restore from stored original text
+                    questionText.innerHTML = '';
+                    questionText.textContent = currentQuestionTextOriginal;
+                    console.log('Speech synthesis error - audio stopped');
                 };
 
                 speechSynthesis.speak(utterance);
@@ -593,10 +649,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error with text-to-speech:', error);
-            alert(`Sorry, there was an error reading the question aloud: ${error.message}`);
             readAloudBtn.disabled = false;
             readAloudBtn.classList.remove('active');
-            questionText.innerHTML = questionText.textContent;
+            // Restore from stored original text
+            if (currentQuestionTextOriginal) {
+                questionText.innerHTML = '';
+                questionText.textContent = currentQuestionTextOriginal;
+            }
         }
     }
 
