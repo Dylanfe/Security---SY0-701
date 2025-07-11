@@ -567,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Use browser speech synthesis silently for word boundaries, but play ElevenLabs audio
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.volume = 0; // Mute the browser speech
-                utterance.rate = 0.9;
+                utterance.rate = 1.1; // Slightly faster to better match ElevenLabs timing
 
                 const audio = new Audio(audioUrl);
                 let currentWordIndex = 0;
