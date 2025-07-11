@@ -23,9 +23,8 @@ jobs:
       - name: Inject API key into environment
         run: |
           # Create a script that injects the API key at runtime
-          echo "<script>" > api-inject.js
+          echo "// Auto-generated API key injection" > api-inject.js
           echo "window.ELEVENLABS_API_KEY = '${{ secrets.ELEVENLABS_API_KEY }}';" >> api-inject.js
-          echo "</script>" >> api-inject.js
           cat api-inject.js
 
       - name: Setup Pages

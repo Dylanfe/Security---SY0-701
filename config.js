@@ -3,7 +3,7 @@
 
 const config = {
     // ElevenLabs API key - will be injected at build time by GitHub Actions
-    elevenLabsApiKey: process.env.ELEVENLABS_API_KEY || window.ELEVENLABS_API_KEY || null
+    elevenLabsApiKey: (typeof window !== 'undefined' && window.ELEVENLABS_API_KEY) || null
 };
 
 // For development: you can create a config.local.js file with your API key
