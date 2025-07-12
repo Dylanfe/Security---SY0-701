@@ -1,7 +1,3 @@
-/**
- * Deepgram Text-to-Speech with Word Highlighting
- * Note: This exposes the API key in client-side code - use a backend proxy for production
- */
 
 class DeepgramTTS {
     constructor(textContainer, playButton, voiceSelect) {
@@ -83,6 +79,11 @@ class DeepgramTTS {
 
     _prepareText(text) {
         this.originalText = text;
+        
+        // Store the original DOM content
+        this.originalHTML = this.textContainer.innerHTML;
+        
+        // Clear and create word spans for highlighting
         this.textContainer.innerHTML = '';
         
         // Split text into words while preserving spaces and punctuation
@@ -111,7 +112,8 @@ class DeepgramTTS {
             this.resume();
             return;
         } else {
-            const textToSpeak = this.originalText || this.textContainer.textContent;
+            // Get the current text from the container each time
+            const textToSpeak = this.textContainer.textContent;
             if (!textToSpeak.trim()) {
                 console.warn('No text available to speak');
                 return;
@@ -353,10 +355,15 @@ class DeepgramTTS {
             this.audioElement = null;
         }
         
-        // Restore original text
-        if (this.originalText && this.textContainer.textContent !== this.originalText) {
-            this.textContainer.textContent = this.originalText;
+        // Restore original HTML content
+        if (this.originalHTML) {
+            this.textContainer.innerHTML = this.originalHTML;
         }
+        
+        // Clear stored references
+        this.originalText = '';
+        this.originalHTML = '';
+        this.wordSpans = [];
     }
 
     _updateButtonState(state) {
