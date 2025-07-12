@@ -18,7 +18,6 @@ A comprehensive Security+ (SY0-701) quiz application with professional text-to-s
 
 ```bash
 git clone https://github.com/Dylanfe/Security---SY0-701.git
-cd sy0-701-quiz
 ```
 
 ### 2. Set up Deepgram API Key in GitHub Secrets
