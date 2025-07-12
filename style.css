@@ -46,18 +46,21 @@ body {
     margin: 0;
     padding: 0; /* Padding moved to container */
     transition: background-color 0.3s, color 0.3s;
+    /* iOS safe area support */
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 body.quiz-active {
     padding-left: 280px;
 }
 
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px 30px;
-    transition: margin-left 0.3s;
-}
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px 30px;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); /* Account for iOS safe area */
+        transition: margin-left 0.3s;
+    }
 
 .container.study-guide-active {
     max-width: 95%;
@@ -1341,6 +1344,7 @@ select:focus > option {
     .container {
         margin: 0;
         padding: 10px;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); /* Account for iOS safe area */
         max-width: none;
         width: 100%;
         box-sizing: border-box;
@@ -1544,17 +1548,19 @@ select:focus > option {
         flex-direction: row;
         gap: 10px;
         margin-top: 15px;
+        margin-bottom: 50px; /* Add bottom margin to avoid iOS navigation bar */
         padding: 0 5px;
         justify-content: space-between;
     }
     
     #prev-btn, #next-btn {
         flex: 1;
-        padding: 12px;
+        padding: 15px 12px; /* Increased vertical padding for better touch targets */
         font-size: 16px;
         border-radius: 8px;
         touch-action: manipulation;
         max-width: 48%;
+        min-height: 44px; /* Ensure minimum touch target size */
     }
     
     #prev-btn {
