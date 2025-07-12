@@ -34,14 +34,14 @@ jobs:
     - name: Inject API Key into Config
       run: |
         # Replace the placeholder with actual API key from secrets
-        sed -i "s/\${DEEPGRAM_API_KEY}/${{ secrets.DEEPGRAM_API_KEY }}/g" config.js
+        sed -i "s/\\\${DEEPGRAM_API_KEY}/${{ secrets.DEEPGRAM_API_KEY }}/g" config.js
         
         # Verify the replacement worked (without showing the key)
-        if grep -q "secrets.DEEPGRAM_API_KEY" config.js; then
-          echo "❌ API key injection failed"
+        if grep -q "\${DEEPGRAM_API_KEY}" config.js; then
+          echo " API key injection failed"
           exit 1
         else
-          echo "✅ API key injected successfully"
+          echo " API key injected successfully"
         fi
 
     - name: Setup Pages
