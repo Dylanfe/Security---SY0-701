@@ -47,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let palettePage = 0;
     const questionsPerPage = 50;
     let allObjectives = [];
-    let currentAudioUtterance = null;
-    let currentHighlightInterval = null;
-    let currentQuestionTextOriginal = '';
+    let deepgramTTS = null; // Deepgram TTS instance
 
     // Official Security+ (V7) objectives with titles, descriptions, and topic mapping
     const officialObjectives = [
@@ -277,31 +275,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopCurrentAudio() {
-        // Stop speech synthesis immediately
+        // Stop Deepgram TTS if active
+        if (deepgramTTS) {
+            deepgramTTS.stop();
+        }
+        
+        // Fallback: stop any other speech synthesis
         if (speechSynthesis.speaking) {
             speechSynthesis.cancel();
-        }
-        
-        // Stop ResponsiveVoice if it's playing
-        if (typeof responsiveVoice !== 'undefined' && responsiveVoice.isPlaying()) {
-            responsiveVoice.cancel();
-        }
-        
-        // Clear any highlighting intervals
-        if (currentHighlightInterval) {
-            clearInterval(currentHighlightInterval);
-            currentHighlightInterval = null;
-        }
-        
-        // Reset button state
-        readAloudBtn.disabled = false;
-        readAloudBtn.classList.remove('active');
-        readAloudBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
-        
-        // Restore text from stored original, never from DOM
-        if (currentQuestionTextOriginal) {
-            questionText.innerHTML = '';
-            questionText.textContent = currentQuestionTextOriginal;
         }
         
         console.log('Audio stopped and UI reset');
@@ -320,12 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
         questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questionsForCurrentQuiz.length}`;
         questionTopic.textContent = question.topic;
         
-        // Store the original question text globally to prevent corruption
-        currentQuestionTextOriginal = question.question;
-        
-        // Always set the question text directly from the data source to prevent corruption
+        // Set the question text directly from the data source
         questionText.innerHTML = '';
-        questionText.textContent = currentQuestionTextOriginal;
+        questionText.textContent = question.question;
         
         optionsList.innerHTML = '';
 
@@ -561,103 +539,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     restartBtn.addEventListener('click', initializeQuiz);
 
-    readAloudBtn.addEventListener('click', () => {
-        // Get text directly from the question data source, not from DOM
-        const question = questionsForCurrentQuiz[currentQuestionIndex];
-        const text = question ? question.question : questionText.textContent;
-        if (text) {
-            readAloud(text);
-        }
-    });
-
-    async function readAloud(text) {
-        try {
-            readAloudBtn.disabled = true;
-            readAloudBtn.classList.add('active');
-
-            // Use browser speech synthesis with word highlighting
-            if ('speechSynthesis' in window) {
-                // Use the stored original text to ensure consistency
-                const originalQuestionText = currentQuestionTextOriginal || text;
-                
-                // Create word highlighting based on original question text
-                const words = originalQuestionText.split(/(\s+)/).filter(word => word.trim().length > 0);
-                questionText.innerHTML = originalQuestionText.split(/(\s+)/).map(part => 
-                    part.trim().length > 0 ? `<span>${part}</span>` : part
-                ).join('');
-                const wordSpans = Array.from(questionText.querySelectorAll('span'));
-
-                const utterance = new SpeechSynthesisUtterance(text);
-                
-                // Try to find a more natural voice
-                const voices = speechSynthesis.getVoices();
-                const preferredVoice = voices.find(voice => 
-                    voice.name.includes('Google') || 
-                    voice.name.includes('Microsoft') ||
-                    voice.name.includes('Natural') ||
-                    voice.name.includes('Enhanced')
-                ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
-                
-                if (preferredVoice) {
-                    utterance.voice = preferredVoice;
-                }
-                
-                utterance.rate = 0.9;
-                utterance.pitch = 1;
-                utterance.volume = 1;
-
-                let currentWordIndex = 0;
-
-                utterance.onboundary = (event) => {
-                    if (event.name === 'word') {
-                        // Remove highlight from previous word
-                        if (currentWordIndex > 0 && wordSpans[currentWordIndex - 1]) {
-                            wordSpans[currentWordIndex - 1].classList.remove('highlight');
-                        }
-                        
-                        // Highlight current word
-                        if (currentWordIndex < wordSpans.length && wordSpans[currentWordIndex]) {
-                            wordSpans[currentWordIndex].classList.add('highlight');
-                            currentWordIndex++;
-                        }
-                    }
-                };
-
-                utterance.onend = () => {
-                    wordSpans.forEach(span => span.classList.remove('highlight'));
-                    readAloudBtn.disabled = false;
-                    readAloudBtn.classList.remove('active');
-                    // Always restore from stored original text
-                    questionText.innerHTML = '';
-                    questionText.textContent = currentQuestionTextOriginal;
-                };
-
-                utterance.onerror = () => {
-                    wordSpans.forEach(span => span.classList.remove('highlight'));
-                    readAloudBtn.disabled = false;
-                    readAloudBtn.classList.remove('active');
-                    // Always restore from stored original text
-                    questionText.innerHTML = '';
-                    questionText.textContent = currentQuestionTextOriginal;
-                    console.log('Speech synthesis error - audio stopped');
-                };
-
-                speechSynthesis.speak(utterance);
-            } else {
-                throw new Error('Text-to-speech not supported in this browser');
-            }
-
-        } catch (error) {
-            console.error('Error with text-to-speech:', error);
-            readAloudBtn.disabled = false;
-            readAloudBtn.classList.remove('active');
-            // Restore from stored original text
-            if (currentQuestionTextOriginal) {
-                questionText.innerHTML = '';
-                questionText.textContent = currentQuestionTextOriginal;
-            }
-        }
+    // Initialize Deepgram TTS when DOM is ready
+    function initializeDeepgramTTS() {
+        deepgramTTS = new DeepgramTTS(questionText, readAloudBtn, null);
+        deepgramTTS.init();
+        
+        console.log('Deepgram TTS initialized successfully');
     }
+
+    // Initialize TTS after a short delay to ensure DOM is ready
+    setTimeout(initializeDeepgramTTS, 100);
 
     fetch('sy0-701-questions.json')
         .then(response => response.json())

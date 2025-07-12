@@ -1,0 +1,235 @@
+/* Enhanced TTS Styles for Word Highlighting */
+
+/* TTS word highlighting */
+.tts-word {
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 3px;
+    padding: 1px 2px;
+}
+
+.tts-highlight {
+    background-color: #ffeb3b !important;
+    color: #000 !important;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(255, 235, 59, 0.3);
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* Deepgram TTS word highlighting */
+.deepgram-word {
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 3px;
+    padding: 1px 2px;
+}
+
+.deepgram-highlight {
+    background-color: transparent !important;
+    color: #007bff !important;
+    font-weight: bold !important;
+    text-shadow: none;
+    box-shadow: none;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes deepgramPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Dark mode support for highlighting */
+.dark-mode .tts-highlight {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.4);
+}
+
+.dark-mode .deepgram-highlight {
+    background-color: transparent !important;
+    color: #007bff !important;
+    font-weight: bold !important;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+/* TTS Controls */
+.tts-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.tts-voice-select {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+    font-size: 14px;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.dark-mode .tts-voice-select {
+    background: #333;
+    border-color: #555;
+    color: #fff;
+}
+
+.tts-voice-select option[data-local="false"] {
+    color: #ff6b35;
+    font-style: italic;
+}
+
+.dark-mode .tts-voice-select option[data-local="false"] {
+    color: #ff8a65;
+}
+
+/* Deepgram voice options styling */
+.tts-voice-select option[data-gender="female"] {
+    color: #e91e63;
+}
+
+.tts-voice-select option[data-gender="male"] {
+    color: #2196f3;
+}
+
+.dark-mode .tts-voice-select option[data-gender="female"] {
+    color: #f48fb1;
+}
+
+.dark-mode .tts-voice-select option[data-gender="male"] {
+    color: #64b5f6;
+}
+
+/* Button states */
+#read-aloud-btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+#read-aloud-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Voice info tooltip */
+.voice-info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.dark-mode .voice-info {
+    color: #aaa;
+}
+
+.voice-warning {
+    color: #ff6b35;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.voice-warning.show {
+    display: block;
+}
+
+/* Deepgram status indicator */
+.deepgram-status {
+    color: #00bcd4;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.deepgram-status::before {
+    content: "🌐 ";
+}
+
+.dark-mode .deepgram-status {
+    color: #26c6da;
+}
+
+/* Loading spinner for Deepgram */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Smooth scrolling for highlighted words */
+.tts-word:target,
+.tts-highlight,
+.deepgram-word:target,
+.deepgram-highlight {
+    scroll-margin-top: 100px;
+}
+
+/* Desktop padding for legend items */
+.legend-item {
+    padding: 4px 8px;
+    margin: 0 4px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .tts-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .tts-voice-select {
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
+    }
+    
+    .tts-highlight,
+    .deepgram-highlight {
+        animation: none; /* Reduce animations on mobile for performance */
+    }
+    
+    .legend-item {
+        padding: 2px 4px;
+        margin: 0 2px;
+    }
+}
+
+/* Accessibility improvements */
+.tts-word:focus,
+.deepgram-word:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .tts-word,
+    .tts-highlight,
+    .deepgram-word,
+    .deepgram-highlight {
+        transition: none;
+        animation: none;
+    }
+    
+    .tts-highlight,
+    .deepgram-highlight {
+        transform: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+}

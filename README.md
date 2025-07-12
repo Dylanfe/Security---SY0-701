@@ -1,144 +1,128 @@
-# SY0-701 Security+ Practice Quiz & Study Guide
+# SY0-701 Security+ Quiz with Deepgram TTS
 
-A comprehensive web-based application for studying and practicing for the CompTIA Security+ (SY0-701) certification exam. This interactive tool combines practice quizzes with an integrated study guide covering all exam domains.
+A comprehensive Security+ (SY0-701) quiz application with professional text-to-speech narration powered by Deepgram's Odysseus voice.
 
 ## Features
 
-### 🎯 Quiz Mode
-- **Customizable Practice Quizzes**: Select from 1 to 200 questions
-- **Interactive Question Interface**: Multiple-choice questions with immediate feedback
-- **Audio Narration**: Text-to-speech functionality with real-time word highlighting
-- **Progress Tracking**: Visual progress bar and question palette
-- **Question Flagging**: Mark questions for review during the quiz
-- **Detailed Explanations**: Comprehensive explanations for correct and incorrect answers
-- **Memory Aids**: Helpful mnemonics and tips for better retention
-- **Smart Navigation**: Navigate between questions with previous/next controls
-- **Results Summary**: Complete review of your performance with detailed breakdowns
+- 🎯 **Complete SY0-701 Coverage** - All Security+ domains and objectives
+- 🔊 **Professional TTS** - Deepgram's Odysseus voice with word highlighting
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- 🌙 **Dark Mode** - Eye-friendly dark theme
+- 📊 **Progress Tracking** - Question palette and performance analytics
+- 🚩 **Question Flagging** - Mark questions for review
+- 📚 **Study Guide** - Integrated study materials
 
-### 📚 Study Guide Mode
-- **Comprehensive Coverage**: All 5 SY0-701 domains included
-- **Domain Overview**: 
-  - Domain 1.0: General Security Concepts (4 objectives)
-  - Domain 2.0: Threats, Vulnerabilities, and Mitigations (5 objectives)
-  - Domain 3.0: Security Architecture (4 objectives)
-  - Domain 4.0: Security Operations (9 objectives)
-  - Domain 5.0: Governance, Risk, and Compliance (6 objectives)
-- **Search Functionality**: Quick search through study materials
-- **Progress Tracking**: Mark sections as studied and track overall progress
-- **Personal Notes**: Add and save personal study notes
-- **Bookmarking**: Bookmark important sections for quick reference
-- **Print Support**: Print individual sections for offline study
+## Setup Instructions
 
-### 🎨 User Experience
-- **Dark/Light Mode**: Toggle between themes for comfortable studying
-- **Responsive Design**: Works on desktop, tablet, and mobile devices
-- **Question Palette**: Visual overview of answered, flagged, and current questions
-- **Keyboard Navigation**: Efficient navigation using keyboard shortcuts
-- **Local Storage**: Saves your preferences and progress locally
+### 1. Fork/Clone the Repository
 
-## Technology Stack
+```bash
+git clone https://github.com/Dylanfe/Security---SY0-701.git
+cd sy0-701-quiz
+```
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Data**: JSON-based question bank with 200 practice questions
-- **Storage**: Browser localStorage for persistence
-- **Architecture**: Client-side single-page application
+### 2. Set up Deepgram API Key in GitHub Secrets
 
-## Getting Started
+1. **Get your Deepgram API Key:**
+   - Go to [Deepgram Console](https://console.deepgram.com/)
+   - Navigate to your project
+   - Copy your API key
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- No additional software or server required
+2. **Add to GitHub Secrets:**
+   - Go to your GitHub repository
+   - Click **Settings** → **Secrets and variables** → **Actions**
+   - Click **New repository secret**
+   - Name: `DEEPGRAM_API_KEY`
+   - Value: Your Deepgram API key
+   - Click **Add secret**
 
-### Installation
-1. Clone or download this repository
-2. Open `index.html` in your web browser
-3. Start studying immediately - no setup required!
+### 3. Enable GitHub Pages
 
-### Usage
+1. Go to **Settings** → **Pages**
+2. Source: **GitHub Actions**
+3. The site will be deployed automatically when you push to `main`
 
-#### Quiz Mode
-1. Click "Quiz Mode" in the header
-2. Use the slider or input field to select the number of questions (1-200)
-3. Click "Start Quiz" to begin
-4. Answer questions and use the flag button to mark questions for review
-5. **Audio Feature**: Click the audio button (🔊) next to any question to hear it read aloud with real-time word highlighting
-6. Navigate using Previous/Next buttons or the question palette
-7. Review your results and explanations at the end
+The GitHub Action will:
+- ✅ Inject your API key from secrets
+- ✅ Deploy to GitHub Pages
+- ✅ Keep your API key secure
 
-#### Study Guide Mode
-1. Click "Study Guide" in the header
-2. Browse domains and objectives in the sidebar
-3. Click on any objective to view detailed study material
-4. Use the search bar to find specific topics
-5. Mark sections as studied and add personal notes
-6. Bookmark important sections for quick access
+## Local Development
 
-## Question Bank
+For local development, create a `config.local.js` file (not committed to git):
 
-The application includes 200 carefully crafted practice questions covering:
+```javascript
+const DEEPGRAM_CONFIG = {
+    apiKey: 'your-api-key-here',
+    baseUrl: 'https://api.deepgram.com/v1/speak',
+    model: 'aura-2-odysseus-en'
+};
 
-- **Security Controls**: Types, categories, and implementations
-- **Fundamental Concepts**: CIA triad, Zero Trust, AAA framework
-- **Change Management**: Processes and security implications
-- **Cryptography**: Algorithms, key management, PKI
-- **Threat Actors**: Types, motivations, and attack methods
-- **Attack Vectors**: Common threats and delivery methods
-- **Vulnerabilities**: Types, assessment, and management
-- **Security Architecture**: Cloud, on-premises, and hybrid models
-- **Data Protection**: Classification, encryption, and privacy
-- **Resilience & Recovery**: Business continuity and disaster recovery
-- **Security Operations**: Monitoring, incident response, automation
-- **Identity & Access Management**: Authentication, authorization, governance
-- **Risk Management**: Assessment, mitigation, and compliance
-- **Governance**: Policies, procedures, and regulatory compliance
+window.DEEPGRAM_CONFIG = DEEPGRAM_CONFIG;
+```
 
-Each question includes:
-- Clear, exam-style multiple-choice format
-- Detailed explanations for correct answers
-- Explanations for why other options are incorrect
-- Memory aids and study tips
-- Topic classification aligned with SY0-701 objectives
+Then update `index.html` to load this file:
+
+```html
+<script src="config.local.js"></script>
+```
+
+## File Structure
+
+```
+├── index.html              # Main quiz interface
+├── script.js               # Quiz logic and functionality
+├── deepgram-tts.js         # Deepgram TTS with word highlighting
+├── config.js               # Configuration (API key injected by GitHub Actions)
+├── tts-styles.css          # TTS styling and word highlighting
+├── style.css               # Main application styles
+├── study-guide.js          # Study guide content
+├── study-guide-mode.js     # Study guide functionality
+├── sy0-701-questions.json  # Question database
+├── .github/workflows/deploy.yml  # GitHub Actions deployment
+└── README.md               # This file
+```
+
+## Security Features
+
+- 🔒 **API Key Protection** - Never exposed in repository
+- 🚀 **GitHub Actions** - Secure deployment pipeline
+- 🛡️ **Client-side Only** - No backend required
+- 📦 **GitHub Pages** - Free hosting
+
+## TTS Features
+
+- 🎙️ **Odysseus Voice** - Professional male voice optimized for education
+- 📍 **Word Highlighting** - Bold blue highlighting follows speech
+- ⏯️ **Play/Pause/Stop** - Full audio control
+- 📱 **Mobile Optimized** - Works on all devices
+- 🎯 **Accurate Timing** - Smart word duration calculation
 
 ## Browser Compatibility
 
-- ✅ Chrome 70+
-- ✅ Firefox 65+
-- ✅ Safari 12+
-- ✅ Edge 79+
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
+- ✅ Chrome/Chromium (recommended)
+- ✅ Firefox
+- ✅ Safari
+- ✅ Edge
 
 ## Contributing
 
-This is an educational project. If you find errors or have suggestions for improvement:
-
-1. Review the question content in `sy0-701-questions.json`
-2. Check study guide content in the JavaScript files
-3. Report issues or suggest enhancements
-
-## Exam Information
-
-The CompTIA Security+ (SY0-701) certification:
-- **Exam Code**: SY0-701
-- **Questions**: Maximum of 90 questions
-- **Time**: 90 minutes
-- **Passing Score**: 750 (on a scale of 100-900)
-- **Question Types**: Multiple choice and performance-based
-- **Validity**: 3 years
-
-## Study Tips
-
-1. **Use Both Modes**: Combine quiz practice with study guide review
-2. **Flag Difficult Questions**: Focus review time on challenging topics
-3. **Read All Explanations**: Learn from both correct and incorrect answers
-4. **Track Progress**: Use the built-in progress tracking features
-5. **Take Notes**: Add personal notes for complex topics
-6. **Practice Regularly**: Consistent daily practice is more effective than cramming
-7. **Review Flagged Items**: Go back to questions you found difficult
-
-## Disclaimer
-
-This application is for educational purposes only. It is not affiliated with CompTIA and does not guarantee success on the actual SY0-701 exam. Always refer to official CompTIA resources and study materials for the most current exam information.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
 
-This project is provided for educational use. The question content is designed to help students prepare for the Security+ exam and should be used in conjunction with official study materials.
+This project is for educational purposes. Please respect Deepgram's terms of service and API usage limits.
+
+## Support
+
+If you encounter issues:
+
+1. Check that your Deepgram API key is correctly set in GitHub Secrets
+2. Verify GitHub Pages is enabled
+3. Check the Actions tab for deployment errors
+4. Ensure you have sufficient Deepgram API credits
+
